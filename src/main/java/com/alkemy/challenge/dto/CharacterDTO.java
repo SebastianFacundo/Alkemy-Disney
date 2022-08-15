@@ -14,5 +14,5 @@ public class CharacterDTO {
     private int edad;
     private long peso;
     private String historia;
-    private Set<MovieDTOForFindAll> peliculas;
+    private Set<MovieDTO> peliculas;
 }

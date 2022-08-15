@@ -1,5 +1,6 @@
 package com.alkemy.challenge.controller;
 
+import com.alkemy.challenge.dto.CharacterBasicDTO;
 import com.alkemy.challenge.dto.CharacterDTO;
 import com.alkemy.challenge.service.CharacterService;
 import org.springframework.http.HttpStatus;
@@ -21,25 +22,21 @@ public class CharacterController {
         this.characterService = characterService;
     }
 
-    /*
-    Mensaje para mentor: Tengo un bucle infinito al traer un personaje porque una pelicula tambien tiene
-     personajes. Para poder mostrar el detalle use un dto de peliculas sin personajes pero no es la solucion
-     ya que me fije con el debug e internamente sigo teniendo un bucle
-     */
 
     @GetMapping
-    public ResponseEntity <List<CharacterDTO>> getAllCharacters(){
+    public ResponseEntity<List<CharacterDTO>> getAllCharacters() {
 
-        List<CharacterDTO> characters = characterService.getAllCharacters();
+        List<CharacterDTO> response = characterService.getAllCharacters();
 
 
-        return new ResponseEntity<>(characters,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(path ="/{id}")
-    public ResponseEntity<CharacterDTO>getDetailsCharacter(@PathVariable("id") Long id) {
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<CharacterDTO> getDetailsCharacter(@PathVariable("id") Long id) {
 
-        return new ResponseEntity<>(characterService.getCharacter(id), HttpStatus.OK);
+        CharacterDTO response = characterService.getCharacter(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping
@@ -56,11 +53,33 @@ public class CharacterController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping(path="/{id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<CharacterDTO> deleteCharacter(@PathVariable("id") Long id) {
 
-        CharacterDTO response=characterService.delete(id);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        CharacterDTO response = characterService.delete(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping(params = "name")
+    public ResponseEntity<CharacterBasicDTO> getForName(@RequestParam("name") String name) {
+
+        CharacterBasicDTO response= characterService.getCharacterForName(name);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(params = "edad")
+    public ResponseEntity<List<CharacterBasicDTO>> getForAge(@RequestParam("edad") int edad) {
+
+       List<CharacterBasicDTO> response= characterService.getCharactersForAge(edad);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(params = "idMovie")
+    public ResponseEntity<List<CharacterBasicDTO>> getForAge(@RequestParam("idMovie") Long idMovie) {
+
+        List<CharacterBasicDTO> response= characterService.getCharactersForMovie(idMovie);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
 }

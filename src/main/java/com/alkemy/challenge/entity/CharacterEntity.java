@@ -32,7 +32,7 @@ public class CharacterEntity {
     private Boolean borrado = Boolean.FALSE;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "personajes")
-    private Set<MovieEntity> peliculas = new HashSet<>();
+    private List<MovieEntity> peliculas = new ArrayList<>();
 
 
 }
