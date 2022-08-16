@@ -20,6 +20,6 @@ public class MovieDTO {
     private String titulo;
     private LocalDate fechaCreacion;
     private int calificacion;
-    private List<CharacterDTO> personajes = new ArrayList<>();
+    private List<CharacterDTO> personajes;
     private GenderEntity genero;
 }

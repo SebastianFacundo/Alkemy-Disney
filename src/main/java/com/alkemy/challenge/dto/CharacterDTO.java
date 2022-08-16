@@ -3,6 +3,7 @@ package com.alkemy.challenge.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -14,5 +15,5 @@ public class CharacterDTO {
     private int edad;
     private long peso;
     private String historia;
-    private Set<MovieDTO> peliculas;
+    private List<MovieDTO> peliculas;
 }

@@ -7,7 +7,9 @@ import com.alkemy.challenge.dto.MovieDTO;
 import com.alkemy.challenge.entity.CharacterEntity;
 import com.alkemy.challenge.entity.MovieEntity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class CharacterMapper {
@@ -26,7 +28,7 @@ public class CharacterMapper {
 
     public CharacterDTO entityToDto(CharacterEntity characterEntity) {
         CharacterDTO characterDTO = new CharacterDTO();
-        Set<MovieDTO> movieDTOS = new HashSet<>();
+        List<MovieDTO> movieDTOS = new ArrayList<>();
 
         characterDTO.setId(characterEntity.getId());
         characterDTO.setImagen(characterEntity.getImagen());

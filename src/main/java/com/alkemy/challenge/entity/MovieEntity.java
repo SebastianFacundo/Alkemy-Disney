@@ -38,11 +38,12 @@ public class MovieEntity {
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "personaje_pelicula", joinColumns = @JoinColumn(name = "pelicula_id"), inverseJoinColumns = @JoinColumn(name = "personaje_id"))
-    private Set<CharacterEntity> personajes = new HashSet<>();
+    private List<CharacterEntity> personajes = new ArrayList<>();
 
     @ManyToOne()
     @JoinColumn (name = "genero_id")
     private GenderEntity genero;
+    private Boolean borrado = Boolean.FALSE;
 
 
 }

@@ -5,6 +5,7 @@ import com.alkemy.challenge.dto.CharacterDTO;
 import com.alkemy.challenge.service.CharacterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.function.EntityResponse;
 
@@ -18,12 +19,13 @@ public class CharacterController {
     private CharacterService characterService;
 
 
-    private CharacterController(CharacterService characterService) {
+    public CharacterController(CharacterService characterService) {
         this.characterService = characterService;
     }
 
 
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<CharacterDTO>> getAllCharacters() {
 
         List<CharacterDTO> response = characterService.getAllCharacters();
@@ -75,7 +77,7 @@ public class CharacterController {
     }
 
     @GetMapping(params = "idMovie")
-    public ResponseEntity<List<CharacterBasicDTO>> getForAge(@RequestParam("idMovie") Long idMovie) {
+    public ResponseEntity<List<CharacterBasicDTO>> getForIdMovie(@RequestParam("idMovie") Long idMovie) {
 
         List<CharacterBasicDTO> response= characterService.getCharactersForMovie(idMovie);
         return new ResponseEntity<>(response, HttpStatus.OK);
