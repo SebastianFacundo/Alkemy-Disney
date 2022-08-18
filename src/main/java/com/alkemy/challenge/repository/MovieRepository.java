@@ -1,5 +1,6 @@
 package com.alkemy.challenge.repository;
 
+import com.alkemy.challenge.entity.GenderEntity;
 import com.alkemy.challenge.entity.MovieEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,8 @@ import java.util.Optional;
 public interface MovieRepository extends JpaRepository<MovieEntity, Long> {
     Optional<MovieEntity> findByTituloEquals(String titulo);
 
-    List<Optional<MovieEntity>> findByGeneroEquals(Long idGender);
+
+    List<Optional<MovieEntity>> findByGeneroEquals(GenderEntity gender);
 
 /*
     @Query(value = "SELECT * FROM pelicula ORDER BY fecha_creacion :order",nativeQuery = true)

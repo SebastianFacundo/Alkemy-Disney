@@ -5,12 +5,15 @@ import com.alkemy.challenge.dto.CharacterDTO;
 import com.alkemy.challenge.dto.MovieBasicDTO;
 import com.alkemy.challenge.dto.MovieDTO;
 import com.alkemy.challenge.entity.CharacterEntity;
+import com.alkemy.challenge.entity.GenderEntity;
 import com.alkemy.challenge.entity.MovieEntity;
 import com.alkemy.challenge.mapper.MovieMapper;
 import com.alkemy.challenge.repository.CharacterRepository;
+import com.alkemy.challenge.repository.GenderRepository;
 import com.alkemy.challenge.repository.MovieRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +25,8 @@ import java.util.stream.Collectors;
 public class MovieService {
     @Autowired
     MovieRepository movieRepository;
-
+    @Autowired
+    GenderRepository genderRepository;
     MovieMapper movieMapper = new MovieMapper();
 
     public List<MovieDTO> getAllMovies() {
@@ -94,7 +98,9 @@ public class MovieService {
 
     public List<MovieBasicDTO> getMoviesForIdGender(Long idGender) {
 
-        List<Optional<MovieEntity>> moviesEntity = movieRepository.findByGeneroEquals(idGender).stream().filter(movieEntity -> movieEntity.get().getBorrado() == Boolean.FALSE).collect(Collectors.toList());
+
+        Optional<GenderEntity> genderEntity= genderRepository.findById(idGender);
+        List<Optional<MovieEntity>> moviesEntity = movieRepository.findByGeneroEquals(genderEntity.get()).stream().filter(movieEntity -> movieEntity.get().getBorrado() == Boolean.FALSE).collect(Collectors.toList());
 
         List<MovieBasicDTO> moviesBasicDTO = moviesEntity.stream().map(movieEntity -> movieMapper.entityToBasicDto(movieEntity.get())).collect(Collectors.toList());
 
