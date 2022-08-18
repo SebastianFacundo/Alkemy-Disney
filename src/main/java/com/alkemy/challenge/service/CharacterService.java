@@ -66,6 +66,7 @@ public class CharacterService {
             throw new RuntimeException("NOMBRE YA INGRESADO");
         }
         CharacterEntity characterEntity = characterMapper.refresh(characterDTO);
+        characterEntity.setPeliculas(findCharacter.get().getPeliculas());
 
         characterRepository.save(characterEntity);
 

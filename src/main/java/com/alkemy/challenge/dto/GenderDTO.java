@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GenderDTO {
-
     private String nombre;
     private String imagen;
 }

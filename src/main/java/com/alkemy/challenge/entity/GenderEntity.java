@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="genero")
@@ -17,6 +18,5 @@ public class GenderEntity {
 
     private String nombre;
     private String imagen;
-
 
 }

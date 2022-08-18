@@ -25,7 +25,7 @@ public class CharacterController {
 
 
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<CharacterDTO>> getAllCharacters() {
 
         List<CharacterDTO> response = characterService.getAllCharacters();

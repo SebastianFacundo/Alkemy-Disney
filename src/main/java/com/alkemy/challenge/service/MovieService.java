@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,11 +23,14 @@ public class MovieService {
     @Autowired
     MovieRepository movieRepository;
 
-    MovieMapper movieMapper=new MovieMapper();
+    MovieMapper movieMapper = new MovieMapper();
 
     public List<MovieDTO> getAllMovies() {
 
-        return movieRepository.findAll().stream().map(movieEntity -> movieMapper.entityToDto(movieEntity)).collect(Collectors.toList());
+        List<MovieEntity> moviesEntity = movieRepository.findAll().stream().filter(movieEntity -> movieEntity.getBorrado().equals(Boolean.FALSE)).collect(Collectors.toList());
+        List<MovieDTO> moviesDTO = moviesEntity.stream().map(movieEntity -> movieMapper.entityToDto(movieEntity)).collect(Collectors.toList());
+
+        return moviesDTO;
 
     }
 
@@ -37,20 +41,20 @@ public class MovieService {
             throw new RuntimeException("NO SE ENCONTRO ID");
         }
 
-      MovieDTO movieDTO = movieMapper.entityToDto(movieEntity.get());
+        MovieDTO movieDTO = movieMapper.entityToDto(movieEntity.get());
 
         return movieDTO;
     }
+
     public MovieDTO save(MovieDTO movieDTO) {
         Optional<MovieEntity> findMovie = movieRepository.findByTituloEquals(movieDTO.getTitulo());
         if (!findMovie.isEmpty()) {
             throw new RuntimeException("PELICULA YA EXISTE");
         }
-        //TODO: verificar que la pelicula a ingresar no exista
         MovieEntity movieEntity = movieMapper.dtoToEntity(movieDTO);
         movieRepository.save(movieEntity);
-        movieDTO.setId(movieEntity.getId());
-        return movieDTO;
+
+        return movieMapper.entityToDto(movieEntity);
     }
 
     public MovieDTO update(MovieDTO movieDTO) {
@@ -59,13 +63,14 @@ public class MovieService {
             throw new RuntimeException("NO SE ENCONTRO ID");
         }
 
-        Optional<MovieEntity> findMovieByTitulo =movieRepository.findByTituloEquals(movieDTO.getTitulo());
-        if((!findMovieByTitulo.isEmpty())&&findMovieByTitulo.get().getId()!=findMovie.get().getId()){
+        Optional<MovieEntity> findMovieByTitulo = movieRepository.findByTituloEquals(movieDTO.getTitulo());
+        if ((!findMovieByTitulo.isEmpty()) && findMovieByTitulo.get().getId() != findMovie.get().getId()) {
             throw new RuntimeException("PELICULA YA INGRESADA");
         }
         MovieEntity movieEntity = movieMapper.refresh(movieDTO);
-
+        movieEntity.setPersonajes(findMovie.get().getPersonajes());
         movieRepository.save(movieEntity);
+
 
         return movieMapper.entityToDto(movieEntity);
     }
@@ -98,14 +103,20 @@ public class MovieService {
 
     public List<MovieBasicDTO> getMoviesForOrder(String order) {
 
-      List<Optional<MovieEntity>>moviesEntity =movieRepository.findByOrder(order).stream().filter(movieEntity -> movieEntity.get().getBorrado() == Boolean.FALSE).collect(Collectors.toList());
+        List<Optional<MovieEntity>>moviesEntity= new ArrayList<>();
 
-      List<MovieBasicDTO> movieBasicDTOS=moviesEntity.stream().map(movieEntity -> movieMapper.entityToBasicDto(movieEntity.get())).collect(Collectors.toList());
+        if(order.toLowerCase().equals("asc")){
+           moviesEntity = movieRepository.findByOrderByFechaCreacionAsc().stream().filter(movieEntity -> movieEntity.get().getBorrado() == Boolean.FALSE).collect(Collectors.toList());
+        } else if (order.toLowerCase().equals("desc")) {
+            moviesEntity = movieRepository.findByOrderByFechaCreacionDesc().stream().filter(movieEntity -> movieEntity.get().getBorrado() == Boolean.FALSE).collect(Collectors.toList());
+        }
 
-      return movieBasicDTOS;
+
+        List<MovieBasicDTO> movieBasicDTOS = moviesEntity.stream().map(movieEntity -> movieMapper.entityToBasicDto(movieEntity.get())).collect(Collectors.toList());
+
+        return movieBasicDTOS;
 
     }
-
 
 
 }

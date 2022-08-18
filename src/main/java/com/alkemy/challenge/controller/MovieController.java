@@ -21,7 +21,7 @@ public class MovieController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<MovieDTO>> getAllMovies() {
 
         List<MovieDTO> response =movieService.getAllMovies();

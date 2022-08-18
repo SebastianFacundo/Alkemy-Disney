@@ -15,8 +15,11 @@ public interface MovieRepository extends JpaRepository<MovieEntity, Long> {
 
     List<Optional<MovieEntity>> findByGeneroEquals(Long idGender);
 
-//TODO: no me toma la query
+/*
     @Query(value = "SELECT * FROM pelicula ORDER BY fecha_creacion :order",nativeQuery = true)
    //@Query("SELECT m FROM MovieEntity m ORDER BY m.fechaCreacion :order")
     List<Optional<MovieEntity>> findByOrder(@Param("order") String order);
+*/
+     List <Optional<MovieEntity>>findByOrderByFechaCreacionAsc();
+    List <Optional<MovieEntity>>findByOrderByFechaCreacionDesc();
 }
