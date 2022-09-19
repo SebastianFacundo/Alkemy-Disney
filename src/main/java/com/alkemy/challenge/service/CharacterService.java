@@ -92,7 +92,7 @@ public class CharacterService {
 
         List<Optional<CharacterEntity>> charactersEntity = characterRepository.findByEdadEquals(edad).stream().filter(characterEntity -> characterEntity.get().getBorrado() == Boolean.FALSE).collect(Collectors.toList());
         if (charactersEntity.isEmpty()) {
-            throw new ParamNotFound("Personaje no encontrado");
+            throw new ParamNotFound("Personajes no encontrados");
         }
 
         List<CharacterBasicDTO> charactersBasicDTO = charactersEntity.stream().map(characterEntity -> characterMapper.entityToBasicDto(characterEntity.get())).collect(Collectors.toList());
@@ -103,6 +103,9 @@ public class CharacterService {
     public List<CharacterBasicDTO> getCharactersForMovie(Long idMovie) {
 
         List<Optional<CharacterEntity>>charactersEntity =characterRepository.findByMovie(idMovie).stream().filter(characterEntity -> characterEntity.get().getBorrado() == Boolean.FALSE).collect(Collectors.toList());
+        if (charactersEntity.isEmpty()) {
+            throw new ParamNotFound("Personajes no encontrados");
+        }
 
         List<CharacterBasicDTO> characterBasicDTOS=charactersEntity.stream().map(characterEntity -> characterMapper.entityToBasicDto(characterEntity.get())).collect(Collectors.toList());
 
