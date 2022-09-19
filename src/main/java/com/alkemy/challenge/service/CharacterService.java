@@ -3,6 +3,8 @@ package com.alkemy.challenge.service;
 import com.alkemy.challenge.dto.CharacterBasicDTO;
 import com.alkemy.challenge.dto.CharacterDTO;
 import com.alkemy.challenge.entity.CharacterEntity;
+import com.alkemy.challenge.exception.Duplicate;
+import com.alkemy.challenge.exception.ParamNotFound;
 import com.alkemy.challenge.mapper.CharacterMapper;
 import com.alkemy.challenge.repository.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ public class CharacterService {
 
         Optional<CharacterEntity> characterEntity = characterRepository.findById(id);
         if (characterEntity.isEmpty() || characterEntity.get().getBorrado()) {
-            throw new RuntimeException("NO SE ENCONTRO ID");
+            throw new ParamNotFound("id personaje no valido");
         }
 
         CharacterDTO characterDTO = characterMapper.entityToDto(characterEntity.get());
@@ -42,7 +44,7 @@ public class CharacterService {
 
         Optional<CharacterEntity> findCharacter = characterRepository.findByNombreEquals(characterDTO.getNombre());
         if (!findCharacter.isEmpty()) {
-            throw new RuntimeException("PERSONAJE YA EXISTE");
+            throw new Duplicate("PERSONAJE YA INGRESADO");
         }
         CharacterEntity characterEntity = characterMapper.dtoToEntity(characterDTO);
         characterRepository.save(characterEntity);
@@ -54,13 +56,13 @@ public class CharacterService {
 
         Optional<CharacterEntity> findCharacter = characterRepository.findById(characterDTO.getId());
         if (findCharacter.isEmpty() || findCharacter.get().getBorrado()) {
-            throw new RuntimeException("NO SE ENCONTRO ID");
+            throw new ParamNotFound("id personaje no valido");
         }
 
         //VERIFICO QUE EL NOMBRE NO CORRESPONDA A OTRO PERSONAJE YA INGRESADO
         Optional<CharacterEntity> findCharacterByName = characterRepository.findByNombreEquals(characterDTO.getNombre());
         if((!findCharacterByName.isEmpty())&&findCharacterByName.get().getId()!=findCharacter.get().getId()){
-            throw new RuntimeException("NOMBRE YA INGRESADO");
+            throw new Duplicate("PERSONAJE YA INGRESADO");
         }
         CharacterEntity characterEntity = characterMapper.refresh(characterDTO);
         characterEntity.setPeliculas(findCharacter.get().getPeliculas());
@@ -71,7 +73,7 @@ public class CharacterService {
     }
 
     public CharacterDTO delete(Long id) {
-        CharacterEntity characterEntity = characterRepository.findById(id).orElseThrow(() -> new RuntimeException("PERSONAJE INEXISTENTE"));
+        CharacterEntity characterEntity = characterRepository.findById(id).orElseThrow(() -> new ParamNotFound("id personaje no valido"));
         characterEntity.setBorrado(Boolean.TRUE);
         characterRepository.save(characterEntity);
 
@@ -81,7 +83,7 @@ public class CharacterService {
     public CharacterBasicDTO getCharacterForName(String name) {
         Optional<CharacterEntity> findCharacter = characterRepository.findByNombreEquals(name);
         if (findCharacter.isEmpty() || findCharacter.get().getBorrado()) {
-            throw new RuntimeException("NO SE ENCONTRO EL PERSONAJE");
+            throw new ParamNotFound("Personaje no encontrado");
         }
         return characterMapper.entityToBasicDto(findCharacter.get());
     }
@@ -89,6 +91,9 @@ public class CharacterService {
     public List<CharacterBasicDTO> getCharactersForAge(int edad) {
 
         List<Optional<CharacterEntity>> charactersEntity = characterRepository.findByEdadEquals(edad).stream().filter(characterEntity -> characterEntity.get().getBorrado() == Boolean.FALSE).collect(Collectors.toList());
+        if (charactersEntity.isEmpty()) {
+            throw new ParamNotFound("Personaje no encontrado");
+        }
 
         List<CharacterBasicDTO> charactersBasicDTO = charactersEntity.stream().map(characterEntity -> characterMapper.entityToBasicDto(characterEntity.get())).collect(Collectors.toList());
 

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -40,42 +41,42 @@ public class CharacterController {
     }
 
     @PostMapping
-    public ResponseEntity<CharacterDTO> addCharacter(@RequestBody CharacterDTO characterDTO) {
+    public ResponseEntity<CharacterDTO> addCharacter(@Valid @RequestBody CharacterDTO characterDTO) {
 
         CharacterDTO response = characterService.save(characterDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<CharacterDTO> updateCharacter(@RequestBody CharacterDTO characterDTO) {
+    public ResponseEntity<CharacterDTO> updateCharacter(@Valid @RequestBody CharacterDTO characterDTO) {
 
         CharacterDTO response = characterService.update(characterDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<CharacterDTO> deleteCharacter(@PathVariable("id") Long id) {
+    public ResponseEntity<CharacterDTO> deleteCharacter(@Valid @PathVariable("id") Long id) {
 
         CharacterDTO response = characterService.delete(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(params = "name")
-    public ResponseEntity<CharacterBasicDTO> getForName(@RequestParam("name") String name) {
+    public ResponseEntity<CharacterBasicDTO> getForName(@Valid @RequestParam("name") String name) {
 
         CharacterBasicDTO response= characterService.getCharacterForName(name);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(params = "edad")
-    public ResponseEntity<List<CharacterBasicDTO>> getForAge(@RequestParam("edad") int edad) {
+    public ResponseEntity<List<CharacterBasicDTO>> getForAge(@Valid @RequestParam("edad") int edad) {
 
        List<CharacterBasicDTO> response= characterService.getCharactersForAge(edad);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(params = "idMovie")
-    public ResponseEntity<List<CharacterBasicDTO>> getForIdMovie(@RequestParam("idMovie") Long idMovie) {
+    public ResponseEntity<List<CharacterBasicDTO>> getForIdMovie(@Valid @RequestParam("idMovie") Long idMovie) {
 
         List<CharacterBasicDTO> response= characterService.getCharactersForMovie(idMovie);
         return new ResponseEntity<>(response, HttpStatus.OK);

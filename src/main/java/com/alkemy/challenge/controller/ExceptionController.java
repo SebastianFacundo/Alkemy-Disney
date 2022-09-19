@@ -1,6 +1,7 @@
 package com.alkemy.challenge.controller;
 
 import com.alkemy.challenge.dto.ApiErrorDTO;
+import com.alkemy.challenge.exception.Duplicate;
 import com.alkemy.challenge.exception.ParamNotFound;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,17 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
         ApiErrorDTO errorDTO = new ApiErrorDTO(
                 HttpStatus.BAD_REQUEST,ex.getMessage(), Arrays.asList("Param Not Found")
+        );
+
+        return handleExceptionInternal(ex,errorDTO, new HttpHeaders(),HttpStatus.BAD_REQUEST,request);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(Duplicate.class)
+    protected ResponseEntity<Object> handleDuplicate(RuntimeException ex, WebRequest request){
+
+        ApiErrorDTO errorDTO = new ApiErrorDTO(
+                HttpStatus.BAD_REQUEST,ex.getMessage(), Arrays.asList("Duplicate")
         );
 
         return handleExceptionInternal(ex,errorDTO, new HttpHeaders(),HttpStatus.BAD_REQUEST,request);

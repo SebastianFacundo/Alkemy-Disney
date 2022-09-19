@@ -4,6 +4,7 @@ import com.alkemy.challenge.dto.MovieBasicDTO;
 import com.alkemy.challenge.dto.MovieDTO;
 import com.alkemy.challenge.entity.GenderEntity;
 import com.alkemy.challenge.entity.MovieEntity;
+import com.alkemy.challenge.exception.Duplicate;
 import com.alkemy.challenge.exception.ParamNotFound;
 import com.alkemy.challenge.mapper.MovieMapper;
 import com.alkemy.challenge.repository.GenderRepository;
@@ -49,8 +50,8 @@ public class MovieService {
     public MovieDTO save(MovieDTO movieDTO) {
         Optional<MovieEntity> findMovie = movieRepository.findByTituloEquals(movieDTO.getTitulo());
         if (!findMovie.isEmpty()&&findMovie.get().getBorrado().equals(Boolean.FALSE)) {
-            //TODO: crear excepcion duplicateException y tratar en el controller de excepciones
-            throw new RuntimeException("PELICULA YA EXISTE");
+
+            throw new Duplicate("PELICULA YA INGRESADA");
         }
         MovieEntity movieEntity = movieMapper.dtoToEntity(movieDTO);
         movieRepository.save(movieEntity);
@@ -66,8 +67,8 @@ public class MovieService {
 
         Optional<MovieEntity> findMovieByTitulo = movieRepository.findByTituloEquals(movieDTO.getTitulo());
         if ((!findMovieByTitulo.isEmpty()) && findMovieByTitulo.get().getId() != findMovie.get().getId()) {
-            //TODO: crear excepcion duplicateException y tratar en el controller de excepciones
-            throw new RuntimeException("PELICULA YA INGRESADA");
+
+            throw new Duplicate("PELICULA YA INGRESADA");
         }
         MovieEntity movieEntity = movieMapper.refresh(movieDTO);
         movieEntity.setPersonajes(findMovie.get().getPersonajes());
