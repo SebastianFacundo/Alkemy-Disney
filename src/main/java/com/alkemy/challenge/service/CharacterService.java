@@ -5,12 +5,9 @@ import com.alkemy.challenge.dto.CharacterDTO;
 import com.alkemy.challenge.entity.CharacterEntity;
 import com.alkemy.challenge.mapper.CharacterMapper;
 import com.alkemy.challenge.repository.CharacterRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

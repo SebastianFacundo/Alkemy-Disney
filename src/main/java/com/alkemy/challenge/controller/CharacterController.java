@@ -5,9 +5,8 @@ import com.alkemy.challenge.dto.CharacterDTO;
 import com.alkemy.challenge.service.CharacterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
+
 
 import java.util.List;
 
@@ -25,7 +24,6 @@ public class CharacterController {
 
 
     @GetMapping
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<CharacterDTO>> getAllCharacters() {
 
         List<CharacterDTO> response = characterService.getAllCharacters();

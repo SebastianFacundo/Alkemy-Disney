@@ -9,6 +9,9 @@ import lombok.*;
 import org.springframework.core.serializer.Serializer;
 import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ public class MovieEntity {
     @ManyToOne()
     @JoinColumn (name = "genero_id")
     private GenderEntity genero;
+
     private Boolean borrado = Boolean.FALSE;
 
 
